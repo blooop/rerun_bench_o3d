@@ -22,3 +22,11 @@ https://pixi.sh/v0.37.0/
 pixi run bench
 ```
 
+# Example output
+
+There are still quite a few things broken but if run the code you should get something like this:
+
+![3D sweep of ](poisson_param_sweep.png)
+
+
+![A range of sweeps](poisson_data_collection_params.png)
