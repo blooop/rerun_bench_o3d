@@ -1,0 +1,18 @@
+[project]
+authors = ["Austin Gregg-Smith <blooop@gmail.com>"]
+channels = ["conda-forge"]
+description = "Add a short description here"
+name = "o3d_example"
+platforms = ["linux-64"]
+version = "0.1.0"
+
+[tasks]
+grid = "python3 grid_search.py"
+bench = "python3 bench.py"
+
+[dependencies]
+open3d = ">=0.18.0,<0.19"
+rerun-sdk = ">=0.20.1,<0.21"
+
+[pypi-dependencies]
+holobench = "==1.31.0"

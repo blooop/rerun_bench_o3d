@@ -1,0 +1,25 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "set <cfg> from active file; sa",
+			"type": "shell",
+			"command": "echo ${file} > ${workspaceFolder}/.vscode/active_file.cfg; echo Setting the current file: ${file} as the active file.",
+			"problemMatcher": [],
+			"group": {
+				"kind": "test",
+				"isDefault": "True"
+			}
+		},
+		{
+			"label": "run <cfg>",
+			"type": "shell",
+			"command": "RUNFILE=$(cat ${workspaceFolder}/.vscode/active_file.cfg); echo Running file: $RUNFILE; pixi run python3 $RUNFILE",
+			"problemMatcher": [],
+			"group": {
+				"kind": "build",
+				"isDefault": "True"
+			}
+		},
+	],
+}
