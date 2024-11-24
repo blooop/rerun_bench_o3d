@@ -11,12 +11,12 @@ class PoissonParams(bch.ParametrizedSweep):
     # INPUT VARIABlES
     depth = bch.IntSweep(
         default=7,
-        bounds=[7, 10],
+        bounds=[3, 10],
         doc="Maximum depth of the tree that will be used for surface reconstruction.",
     )
     scale = bch.FloatSweep(
         default=1.1,
-        bounds=[1.0, 1.4],
+        bounds=[1.1, 1.4],
         doc="Specifies the ratio between the diameter of the cube used for reconstruction and the diameter of the samples’ bounding cube",
     )
 
@@ -29,19 +29,24 @@ class PoissonParams(bch.ParametrizedSweep):
     rrd = bch.ResultContainer()
 
     def __init__(self, **params):
-        super().__init__(*params)
+        super().__init__(**params)
 
         # Load and compute the normals once
 
-        example_data = o3d.data.PCDPointCloud()  # Points to the example PLY file
-        self.pcd = o3d.io.read_point_cloud(example_data.path)
-        print(f"Loaded point cloud has {len(self.pcd.points)} points.")
-        # Estimate normals for the point cloud
+        mesh = o3d.io.read_triangle_mesh(o3d.data.BunnyMesh().path)
+        mesh.compute_vertex_normals()  # Ensure the normals are computed
+# Convert mesh to point cloud
+        point_cloud = mesh.sample_points_poisson_disk(
+            number_of_points=10000
+        )  
 
-        self.pcd.estimate_normals(
+        # Estimate normals for the point cloud
+        point_cloud.estimate_normals(
             search_param=o3d.geometry.KDTreeSearchParamHybrid(radius=0.1, max_nn=30)
         )
-        self.pcd.orient_normals_consistent_tangent_plane(k=30)
+        point_cloud.orient_normals_consistent_tangent_plane(k=30)
+        self.pcd = point_cloud
+
 
     def __call__(self, **kwargs) -> dict:
         """This function is called with the values of the ND sweep as kwargs
@@ -56,7 +61,7 @@ class PoissonParams(bch.ParametrizedSweep):
             self.pcd, depth=self.depth, width=0, scale=1.1, linear_fit=False
         )
 
-        self.rrd = bch.capture_rerun_window(width=300, height=300)
+        self.rrd = bch.capture_rerun_window(width=200, height=200)
         rr.log(
             "mesh",
             rr.Mesh3D(
@@ -73,22 +78,31 @@ if __name__ == "__main__":
     bch.run_flask_in_thread()  # hack to serve .rrd files
 
     run_cfg = bch.BenchRunCfg()
+    # run_cfg.tag = "eagle"
     run_cfg.level = 3  # how finely to divide the search space.
     # Set to true if you want to store and reuse previously calculate values
-    run_cfg.use_sample_cache = True
+    run_cfg.use_sample_cache = True 
 
-    #allows cache to work across sweeps
+    # allows cache to work across sweeps
     run_cfg.only_hash_tag = True
 
+    #Set up grid search using the parameters defined in run_cfg
     bench = PoissonParams().to_bench(run_cfg)
-    # sample using the run_cfg.level
-    bench.plot_sweep(input_vars=["depth", "scale", "linear_fit"], result_vars=["rrd"])
+
+    #redunce sample level otherwise there are too many rerun windows and they start becoming unstable
+    run_cfg.level=3
+    bench.plot_sweep(input_vars=["depth", "scale", "linear_fit"])
 
 
-
+    # TURNED OFF FOR THE MOMENT AS TOO MANY RERUN WINDOWS CRASH CURRENTLY
+    #  
+    # run_cfg.level=4
+    # bench.plot_sweep(input_vars=["depth"])
+    # bench.plot_sweep(input_vars=["scale"])
+    # bench.plot_sweep(input_vars=["linear_fit"])
 
     # #These are the values provided in the original example but it crashes when this many rerun windows are loaded at the same time
-    # #  
+    # #
     # # sample using specific values
     # bench.plot_sweep(
     #     input_vars=[
