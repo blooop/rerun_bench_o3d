@@ -56,7 +56,7 @@ class PoissonParams(bch.ParametrizedSweep):
             self.pcd, depth=self.depth, width=0, scale=1.1, linear_fit=False
         )
 
-        self.rrd = bch.record_rerun_session()
+        self.rrd = bch.capture_rerun_window(width=300, height=300)
         rr.log(
             "mesh",
             rr.Mesh3D(
@@ -70,13 +70,32 @@ class PoissonParams(bch.ParametrizedSweep):
 
 
 if __name__ == "__main__":
-    bch.run_flask_in_thread()  # hack to server .rrd files
+    bch.run_flask_in_thread()  # hack to serve .rrd files
 
     run_cfg = bch.BenchRunCfg()
-    run_cfg.level = 2  # how finely to divide the search space.
+    run_cfg.level = 3  # how finely to divide the search space.
     # Set to true if you want to store and reuse previously calculate values
     run_cfg.use_sample_cache = True
 
+    #allows cache to work across sweeps
+    run_cfg.only_hash_tag = True
+
     bench = PoissonParams().to_bench(run_cfg)
+    # sample using the run_cfg.level
     bench.plot_sweep(input_vars=["depth", "scale", "linear_fit"], result_vars=["rrd"])
+
+
+
+
+    # #These are the values provided in the original example but it crashes when this many rerun windows are loaded at the same time
+    # #  
+    # # sample using specific values
+    # bench.plot_sweep(
+    #     input_vars=[
+    #         bch.p("depth", [7, 8, 9, 10]),
+    #         bch.p("scale", [1.0, 1.1, 1.2, 1.3, 1.4]),
+    #         "linear_fit",
+    #     ],
+    #     result_vars=["rrd"],
+    # )
     bench.report.show()
