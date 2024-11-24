@@ -15,4 +15,4 @@ open3d = ">=0.18.0,<0.19"
 rerun-sdk = ">=0.20.1,<0.21"
 
 [pypi-dependencies]
-holobench = "==1.31.0"
+holobench = "==1.31.1"

@@ -278,7 +278,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/zstandard-0.23.0-py312hef9b889_1.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/zstd-1.5.6-ha6fb4c9_0.conda
       - pypi: https://files.pythonhosted.org/packages/cb/06/8b505aea3d77021b18dcbd8133aa1418f1a1e37e432a465b14c46b2c0eaa/alembic-1.14.0-py3-none-any.whl
-      - pypi: git+https://github.com/dyson-ai/bencher.git@9835df0e9c5ee6a0ddf9a4f84ad1bcb9acd4e744
+      - pypi: git+https://github.com/dyson-ai/bencher.git@fa37339f29cc59fc223888a46be93c77e7784bc9
       - pypi: https://files.pythonhosted.org/packages/fc/55/96142937f66150805c25c4d0f31ee4132fd33497753400734f9dfdcbdc66/bleach-6.2.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/65/5d/e96520996607c9b894a4716ddedc447a68351b0a8729f26ac012c8e7041b/bokeh-3.4.3-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/c6/c6/9963d588cc3d75d766c819e0377a168ef83cf3316a92769971527a1ad1de/colorcet-3.1.0-py3-none-any.whl
@@ -1880,8 +1880,8 @@ packages:
   timestamp: 1730830832687
 - kind: pypi
   name: holobench
-  version: 1.31.0
-  url: git+https://github.com/dyson-ai/bencher.git@9835df0e9c5ee6a0ddf9a4f84ad1bcb9acd4e744
+  version: 1.31.1
+  url: git+https://github.com/dyson-ai/bencher.git@fa37339f29cc59fc223888a46be93c77e7784bc9
   requires_dist:
   - holoviews>=1.15,<=1.19.1
   - numpy>=1.0,<=2.1.3

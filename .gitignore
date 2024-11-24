@@ -4,3 +4,4 @@
 *.egg-info
 cachedir/*
 *.rrd
+.vscode/active_file.cfg
